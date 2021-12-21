@@ -25,7 +25,7 @@ router.register(r"users", views.UserViewSet)
 router.register(r"groups", views.GroupViewSet)
 router.register(r"decks", views.DeckViewSet)
 router.register(r"cards", views.CardViewSet)
-router.register(r"card_reviews", views.CardReviewedViewSet)
+router.register(r"reviewed_cards", views.ReviewedCardViewSet)
 router.register(r"review_sessions", views.ReviewSessionViewSet)
 
 urlpatterns = [

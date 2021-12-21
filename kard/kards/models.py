@@ -6,7 +6,7 @@ Review
     - user: User that initiated the review
     - cards: List of CardReviewed (this is not in )
 
-CardReviewed
+ReviewedCard
 - represented a card that was reviewed.
 - contains metrics about the card during a particular review.
 
@@ -79,9 +79,9 @@ class Card(models.Model):
         return self.name
 
 
-class CardReviewed(models.Model):
+class ReviewedCard(models.Model):
     """
-    CardReviewed: Log a record that a card was reviewed
+    ReviewedCard: Log a record that a card was reviewed
     - Card: Card that was reviewed
     - Date: Date the card was reviewed
     - Correct: True if the user answered the card correctly, False otherwise, None if the user did not answer the card (skipped)
@@ -92,10 +92,10 @@ class CardReviewed(models.Model):
     review_date = models.DateTimeField(auto_now_add=True)
     review_session = models.ForeignKey("ReviewSession", on_delete=models.CASCADE)
 
-    correct = models.BooleanField(default=None)
+    correct = models.BooleanField(blank=True, null=True)
     time_taken = models.DurationField(default=None)
 
-    other_metrics = models.JSONField(default=None)
+    other_metrics = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.card} reviewed on {self.review_date}"

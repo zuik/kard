@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from .models import Deck, Card, CardReviewed, ReviewSession
+from .models import Deck, Card, ReviewedCard, ReviewSession
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,9 +37,9 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class CardReviewedSerializer(serializers.HyperlinkedModelSerializer):
+class ReviewedCardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = CardReviewed
+        model = ReviewedCard
         fields = [
             "id",
             "url",

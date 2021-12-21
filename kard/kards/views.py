@@ -8,10 +8,10 @@ from .serializers import (
     GroupSerializer,
     DeckSerializer,
     CardSerializer,
-    CardReviewedSerializer,
+    ReviewedCardSerializer,
     ReviewSessionSerializer,
 )
-from .models import Deck, Card, CardReviewed, ReviewSession
+from .models import Deck, Card, ReviewedCard, ReviewSession
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -54,13 +54,13 @@ class CardViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class CardReviewedViewSet(viewsets.ModelViewSet):
+class ReviewedCardViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows CardReviewed to be viewed or edited.
+    API endpoint that allows ReviewedCard to be viewed or edited.
     """
 
-    queryset = CardReviewed.objects.all()
-    serializer_class = CardReviewedSerializer
+    queryset = ReviewedCard.objects.all()
+    serializer_class = ReviewedCardSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
