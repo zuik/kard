@@ -55,4 +55,4 @@ class ReviewedCardSerializer(serializers.HyperlinkedModelSerializer):
 class ReviewSessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ReviewSession
-        fields = ["id", "url", "user", "started", "ended", "cards_reviewed"]
+        fields = ["id", "url", "user", "started", "ended"]
