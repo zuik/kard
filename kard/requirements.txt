@@ -1,6 +1,4 @@
 python-dotenv
 requests
-django
 psycopg2-binary
-djangorestframework
-django-cors-headers
+fastapi
