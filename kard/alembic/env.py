@@ -4,12 +4,13 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 
 import os
 import logging
 
-load_dotenv("../.env")
+logger = logging.getLogger("alembic.env")
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,21 +28,17 @@ from kard import models
 
 target_metadata = models.Base.metadata
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
-config = context.config
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-fileConfig(config.config_file_name)
-logger = logging.getLogger("alembic.env")
 
 # overwrite alembic.ini db urls from the config file
+from pathlib import Path
+
+env_path = Path(".").parent / ".env"
+
+load_dotenv(env_path)
+
 if os.environ.get("PG_HOST"):
     pg_url = f"postgresql+psycopg2://{os.environ.get('PG_USER')}:{os.environ.get('PG_PASSWORD')}@{os.environ.get('PG_HOST')}:{os.environ.get('PG_PORT')}/{os.environ.get('PG_DATABASE')}"
+    config.set_section_option("alembic", "sqlalchemy.url", pg_url)
 else:
     logger.warning(
         "Environment variable SETTINGS missing - use default alembic.ini configuration"
