@@ -3,6 +3,8 @@ import Card from './Card'
 
 import useCard, { fetchCardDeck, createReviewedCard } from './hooks/useCard'
 import { createReviewSession, endReviewSession } from './hooks/useBoard'
+import { fetchDeck, fetchDecks } from './hooks/useDeck';
+
 
 import _ from 'lodash'
 
@@ -20,8 +22,8 @@ type ReviewSession = {
  * @param noCards : number : number of card to be selected from the deck. -1 means all cards
  */
 async function selectCards(deckId: number, noCards: number) {
-  const deck = await fetchCardDeck(deckId)
-  const cardIds = deck.cards.map(parseCardId)
+  const deck = await fetchDeck(deckId)
+  const cardIds = deck.cards.map((card: any) => card.id);
   if (noCards === -1) {
     return cardIds
   } else {
@@ -29,19 +31,33 @@ async function selectCards(deckId: number, noCards: number) {
   }
 }
 
-/**
- * parseCardId
- * Parse the card id from the card url
- * @param cardUrl
- * @returns cardId
- */
-function parseCardId(cardURL: string): number | undefined {
-  let re = new RegExp('/cards/(\\d+)/')
-  let match = cardURL.match(re)
-  if (match) {
-    return parseInt(match[1])
-  }
+type DeckType = {
+  id: number,
+  name: string,
+  description: string,
+  added: string,
+  updated: string,
 }
+
+function DeckSelector(props: any) {
+  const [decks, setDecks] = useState<Array<DeckType> | null>(null);
+
+  useEffect(() => {
+    const decksResp = fetchDecks();
+    decksResp.then((decks) => {
+      setDecks(decks);
+    });
+  }, []);
+
+
+
+  return (<div>
+    Deck select: <select>
+      {decks && decks.map((d: DeckType, ix) => <option key={ix} value={d.name}>{d.name}</option>)}
+    </select>
+  </div>)
+}
+
 
 function Board() {
   const [cardId, setCardId] = useState<any | undefined>(undefined)
@@ -52,8 +68,16 @@ function Board() {
 
   function submitCardMetrics(duration: number) {
     if (board) {
-
-      createReviewedCard(cardId, board.id, true, duration).then(resp => { console.log(resp) })
+      createReviewedCard(
+        {
+          cardId: cardId,
+          deckId: 2,
+          reviewSessionId: board.id,
+          correct: true,
+          timeTaken: duration,
+          otherMetrics: {}
+        })
+        .then(resp => { console.log(resp) })
     }
   }
 
@@ -74,6 +98,7 @@ function Board() {
   return (
     <div style={{ margin: '10px' }}>
       <h1>A review board!</h1>
+      <DeckSelector />
       <div>
         {board ? (
           <div>

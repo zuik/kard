@@ -13,7 +13,6 @@ const PROMPT_STYLE = {
 };
 type CardType = {
   id: number;
-  url: string;
   name: string;
   prompt: string;
   answer: string;

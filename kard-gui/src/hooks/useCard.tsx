@@ -1,16 +1,23 @@
-import React from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 
+
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const API_PASSWORD = process.env.REACT_APP_API_PASSWORD || "";
+
 
 export const fetchCardDeck = async (deckId: number) => {
-  const response = await axios.get(`${API_BASE_URL}/decks/${deckId}/`, {
-    auth: { username: "zui", password: API_PASSWORD },
-  });
+  const response = await axios.get(`${API_BASE_URL}/decks/${deckId}/`);
   return response.data;
 };
+
+type CardType = {
+  cardId: number,
+  deckId: number,
+  reviewSessionId: number,
+  correct: boolean,
+  timeTaken: number,
+  otherMetrics: object,
+}
 
 /**
  * createReviewedCard
@@ -22,22 +29,18 @@ export const fetchCardDeck = async (deckId: number) => {
  * @param otherMetrics: object: other metrics to be stored
  */
 export const createReviewedCard = async (
-  cardId: number,
-  reviewSessionId: number,
-  correct: boolean,
-  timeTaken: number,
-  otherMetrics: object = {}
+  card: CardType
 ): Promise<any> => {
   const response = await axios.post(
     `${API_BASE_URL}/reviewed_cards/`,
     {
-      card: `${API_BASE_URL}/cards/${cardId}/`,
-      review_session: `${API_BASE_URL}/review_sessions/${reviewSessionId}/`,
-      correct: correct,
-      time_taken: timeTaken,
-      other_metrics: otherMetrics,
-    },
-    { auth: { username: "zui", password: API_PASSWORD } }
+      card_id: card.cardId,
+      review_session_id: card.reviewSessionId,
+      correct: card.correct,
+      time_taken: card.timeTaken,
+      other_metrics: card.otherMetrics,
+
+    }
   );
   return response.data;
 };
@@ -48,9 +51,7 @@ export const fetchCard = async (cardId: number) => {
   }
 
   const resp = await axios
-    .get(`${API_BASE_URL}/cards/${cardId}`, {
-      auth: { username: "zui", password: API_PASSWORD },
-    });
+    .get(`${API_BASE_URL}/cards/${cardId}`);
 
   return resp.data;
 }
