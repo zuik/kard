@@ -4,7 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from dotenv import load_dotenv, dotenv_values
+from dotenv import load_dotenv
+from pathlib import Path
 
 import os
 import logging
@@ -30,8 +31,6 @@ target_metadata = models.Base.metadata
 
 
 # overwrite alembic.ini db urls from the config file
-from pathlib import Path
-
 env_path = Path(".").parent / ".env"
 
 load_dotenv(env_path)
